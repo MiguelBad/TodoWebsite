@@ -1,5 +1,4 @@
 // import { ConstructionSharp } from '@mui/icons-material';
-import { Edit, EditTwoTone } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 import './index.css';
 
@@ -23,23 +22,34 @@ function TodoApp() {
         }
     }
 
+    const changeCurrentTodo = (todoTitle, todoDescription, oldTodo) => {
+        const index = todoList.findIndex(item => item[0] === oldTodo);
+        const newList = [...todoList]
+        newList[index] = [todoTitle, todoDescription]
+        setTodoList(newList)
+    }
+
     return (
         <main className='main-content'>
             <h1 className='todo-title'>Todo Title Sample</h1>
-            <TodoList todoList={todoList} />
+            <TodoList todoList={todoList} editedInfo={changeCurrentTodo} />
             <AddNewTodo newTodoData={newTodoAdded} />
         </main>
     );
 }
 
-function TodoList ({ todoList }) {
+function TodoList ({ todoList, editedInfo }) {
+    const passEditedInfo = (todoTitle, todoDescription, oldTodo) => {
+        editedInfo(todoTitle, todoDescription, oldTodo)
+    }
+
     return (
         <ul>
             {todoList.map((todo, index) => 
                 <li key={index}>
                     <h2>{todo[0]}</h2>
                     <p>{todo[1]}</p>
-                    <EditTodo currentTodo={todo}/>
+                    <EditTodo currentTodo={todo} editedInfo={passEditedInfo}/>
                 </li>
             )}
         </ul>
@@ -71,23 +81,32 @@ function AddNewTodo({ newTodoData }) {
     );
 }
 
-function EditTodo({ currentTodo }) {
+function EditTodo({ currentTodo, editedInfo }) {
+    const [oldTodo, setOldTodo] = useState("")
     const [editCurrentTodo, setEditCurrentTodo] = useState("")
     const [editCurrentTodoDescription, setEditCurrentTodoDescription] = useState("")
 
-    const 
+    useEffect(() => {
+        setEditCurrentTodo(currentTodo[0])
+        setEditCurrentTodoDescription(currentTodo[1] || "")
+        setOldTodo(currentTodo[0])
+    }, [currentTodo])
+
+    const changeCurrentTodo = () => {
+        editedInfo(editCurrentTodo, editCurrentTodoDescription, oldTodo) 
+    }
 
     return (
         <section className='edit-section'>
             <input
-                value = {currentTodo[0]}
+                value = {editCurrentTodo}
                 onChange = {(event) => setEditCurrentTodo(event.target.value)} 
             />
             <input
-                value = {currentTodo[1] === null ? "" : currentTodo[1]}
+                value = {editCurrentTodoDescription}
                 onChange = {(event) => setEditCurrentTodoDescription(event.target.value)} 
             />
-            <button>Edit</button>
+            <button onClick={changeCurrentTodo}>Edit</button>
         </section>
     )
 }
