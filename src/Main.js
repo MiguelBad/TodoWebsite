@@ -1,4 +1,5 @@
 // import { ConstructionSharp } from '@mui/icons-material';
+import { Edit, EditTwoTone } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 import './index.css';
 
@@ -38,6 +39,7 @@ function TodoList ({ todoList }) {
                 <li key={index}>
                     <h2>{todo[0]}</h2>
                     <p>{todo[1]}</p>
+                    <EditTodo currentTodo={todo}/>
                 </li>
             )}
         </ul>
@@ -69,6 +71,25 @@ function AddNewTodo({ newTodoData }) {
     );
 }
 
+function EditTodo({ currentTodo }) {
+    const [editCurrentTodo, setEditCurrentTodo] = useState("")
+    const [editCurrentTodoDescription, setEditCurrentTodoDescription] = useState("")
 
+    const 
+
+    return (
+        <section className='edit-section'>
+            <input
+                value = {currentTodo[0]}
+                onChange = {(event) => setEditCurrentTodo(event.target.value)} 
+            />
+            <input
+                value = {currentTodo[1] === null ? "" : currentTodo[1]}
+                onChange = {(event) => setEditCurrentTodoDescription(event.target.value)} 
+            />
+            <button>Edit</button>
+        </section>
+    )
+}
 
 export default TodoApp;
