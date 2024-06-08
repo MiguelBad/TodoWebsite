@@ -83,20 +83,28 @@ body {
         .introduction {
             margin: 0 0 0.5rem 0;
         }
+        
+        .username {
+            font-weight: 600;
+            font-size: 1.5rem;
+        }
     }
 
-    .todo-list-container {
+    .todo-category-container {
         margin: 2rem 0;
 
-        .todo-list-heading {
+        .todo-category-heading {
+            font-weight: normal;
             font-size: 1rem;
             margin: 0 0 1rem 0;   
         }
 
-        .todo-list {
+        .todo-category-list {
             padding: 0;
             margin: 0 0 1rem 0;
             list-style: none;
+            font-size: 1.5rem;
+            font-weight: 500;
         }
     }
 

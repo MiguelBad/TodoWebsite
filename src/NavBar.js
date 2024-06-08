@@ -18,10 +18,10 @@ function TodoApp() {
                     <h2 className='username'>User Name</h2>
                 </section>
                 <hr />
-                <section className='todo-list-container'>
-                    <h2 className='todo-list-heading'>Todo List</h2>
-                    <ul className='todo-list'>
-                        <li className='todo'>Todo Title Sample</li>
+                <section className='todo-category-container'>
+                    <h2 className='todo-category-heading'>Todo List</h2>
+                    <ul className='todo-category-list'>
+                        <li className='todo-category'>Todo Title Sample</li>
                     </ul>
                     <p className='add-new-todo'>+ Add New</p>
                 </section>
