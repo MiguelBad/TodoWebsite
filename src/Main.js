@@ -2,9 +2,9 @@ import './index.css';
 
 function TodoApp() {
   return (
-    <div>
-      <h1>To-do App</h1>
-    </div>
+    <main className='main-content'>
+      <h1 className='todo-title'>Todo Title Sample</h1>
+    </main>
   );
 }
 

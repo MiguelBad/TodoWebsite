@@ -18,7 +18,67 @@
     --accent: #a397aa;
 }
 
+#root {
+    display: flex;
+}
+
 body {
-   background-color: var(--background);
-   color: var(--text);
+    background-color: var(--background);
+    color: var(--text);
+    margin: 0;
+    padding: 0;
+
+    h1, h2, h3, h4, h5, h6, p, li, ul {
+        margin-top: 0;
+        margin-bottom: 0;
+        line-height: 1;
+    }
+}
+
+.side-navigation {
+    box-sizing: border-box;
+    padding: 1.5rem;
+    flex-shrink: 0;
+    width: 18rem;
+    height: 100vh;
+    background-color: var(--secondary);
+
+    .website-title {
+        margin: 2rem 0 2rem 0;
+        font-size: 2rem;
+    }
+
+    .profile-container {
+        margin: 0 0 2rem 0;
+
+        .introduction {
+            margin: 0 0 0.5rem 0;
+        }
+
+        .profile-pic-name-container {
+            display: flex;
+            align-items: flex-start;
+
+            .profile-picture {
+                width: 15%;
+            }
+        }
+    }
+
+    .todo-list-container {
+        .todo-list-heading {
+            margin: 0 0 1rem 0;   
+        }
+    }
+}
+
+.main-content {
+    box-sizing: border-box;
+    padding: 1.5rem;
+    width: 100%;
+
+    .todo-title {
+        margin: 2rem 0 0 0;
+    }
+
 }
