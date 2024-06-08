@@ -42,10 +42,39 @@ body {
     width: 18rem;
     height: 100vh;
     background-color: var(--secondary);
+    display: flex;
+    flex-direction: column;
 
-    .website-title {
-        margin: 2rem 0 2rem 0;
-        font-size: 2rem;
+    .top-navigation-part {
+        height: 100%;
+    }
+
+    .bottom-navigation-part {
+        height: max-content;
+    }
+
+    .menu-hamburger-container {
+        display: flex;
+        margin: 2rem 0 ;
+        justify-content: space-between;
+        align-items: center;
+       
+        .menu-title {
+            font-size: 2rem;
+        }
+
+        .hamburger-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+
+            .top-hamburger, .middle-hamburger, .bottom-hamburger {
+                border-radius: 1rem;
+                height: 2px;
+                width: 20px;
+                background-color: var(--text);
+            }
+        }
     }
 
     .profile-container {
@@ -54,22 +83,23 @@ body {
         .introduction {
             margin: 0 0 0.5rem 0;
         }
-
-        .profile-pic-name-container {
-            display: flex;
-            align-items: flex-start;
-
-            .profile-picture {
-                width: 15%;
-            }
-        }
     }
 
     .todo-list-container {
+        margin: 2rem 0;
+
         .todo-list-heading {
+            font-size: 1rem;
             margin: 0 0 1rem 0;   
         }
+
+        .todo-list {
+            padding: 0;
+            margin: 0 0 1rem 0;
+            list-style: none;
+        }
     }
+
 }
 
 .main-content {
