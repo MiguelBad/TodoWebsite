@@ -1,4 +1,4 @@
-import { ConstructionSharp } from '@mui/icons-material';
+// import { ConstructionSharp } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 import './index.css';
 
@@ -16,9 +16,9 @@ function TodoApp() {
         savedTodoListLoaded === true && localStorage.setItem('savedTodoList', JSON.stringify(todoList))
     }, [todoList, savedTodoListLoaded])
 
-    const newTodoAdded = (data) => {
-        if (data !== "" && !todoList.includes(data)) {
-            setTodoList([...todoList, data])
+    const newTodoAdded = (todoTitle, todoDescription) => {
+        if (todoTitle !== "" && todoList.filter(title => title[0] === todoTitle).length === 0) {
+            setTodoList([...todoList, [todoTitle, todoDescription === "" ? null : todoDescription]])
         }
     }
 
@@ -35,7 +35,10 @@ function TodoList ({ todoList }) {
     return (
         <ul>
             {todoList.map((todo, index) => 
-                <li key={index}>{todo}</li>
+                <li key={index}>
+                    <h2>{todo[0]}</h2>
+                    <p>{todo[1]}</p>
+                </li>
             )}
         </ul>
     )
@@ -43,19 +46,26 @@ function TodoList ({ todoList }) {
 
 function AddNewTodo({ newTodoData }) {
     const [addTodoInput, setAddTodoInput] = useState('')
+    const [addTodoDescriptionInput, setAddTodoDescriptionInput] = useState('')
 
     const addToddoButtonClicked = () => {
-        newTodoData(addTodoInput) 
+        newTodoData(addTodoInput, addTodoDescriptionInput) 
     }
 
     return (
-        <div>
+        <section className='add-todo-section'>
             <input 
                 value={addTodoInput}
                 onChange={(event) => setAddTodoInput(event.target.value)}
+                placeholder='Todo Title'
+            />
+            <textarea
+                value={addTodoDescriptionInput}
+                onChange={(event) => setAddTodoDescriptionInput(event.target.value)}
+                placeholder='Add description (optional)...'
             />
             <button onClick={addToddoButtonClicked}>Add Todo</button>
-        </div>
+        </section>
     );
 }
 
