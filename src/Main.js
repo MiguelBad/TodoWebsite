@@ -4,6 +4,18 @@ import './index.css';
 
 function TodoApp() {
     const [todoList, setTodoList] = useState([])
+    const [savedTodoListLoaded, setSavedTodoListLoaded] = useState(false) 
+
+    useEffect(() => {
+        const savedTodoList = JSON.parse(localStorage.getItem('savedTodoList')) || [];
+        setTodoList(savedTodoList)
+        setSavedTodoListLoaded(true)
+    }, [])
+
+    useEffect(() => {
+        savedTodoListLoaded === true && localStorage.setItem('savedTodoList', JSON.stringify(todoList))
+    }, [todoList, savedTodoListLoaded])
+
     const newTodoAdded = (data) => {
         if (data !== "" && !todoList.includes(data)) {
             setTodoList([...todoList, data])
