@@ -78,11 +78,24 @@ function TodoList ({ todoList, editedInfo, removedInfo }) {
 function AddNewTodo({ newTodoData }) {
     const [addTodoInput, setAddTodoInput] = useState('')
     const [addTodoDescriptionInput, setAddTodoDescriptionInput] = useState('')
-    const todoTextbox = useRef(null)
+    const todoTextarea = useRef(null)
+
+    useEffect(() => {
+        todoTextarea.current.style.height = 'auto'
+        todoTextarea.current.style.height = todoTextarea.current.scrollHeight + 'px'
+    }, [addTodoDescriptionInput])
+        
+
+    const todoDescriptionChanged = (event) => {
+        setAddTodoInput(event.target.value)
+        todoTextarea.current.style.height = 'auto'
+        todoTextarea.current.style.height = todoTextarea.current.scrollHeight + 'px'
+    }
 
     const addToddoButtonClicked = () => {
         newTodoData(addTodoInput, addTodoDescriptionInput) 
         setAddTodoInput('')
+        setAddTodoDescriptionInput('')
     }
 
     return (
@@ -90,7 +103,7 @@ function AddNewTodo({ newTodoData }) {
             <div className='add-todo-container'>
                 <input 
                     value={addTodoInput}
-                    onChange={(event) => setAddTodoInput(event.target.value)}
+                    onChange={(event) => todoDescriptionChanged(event)}
                     placeholder='Todo Title'
                     className='add-todo-title'
                 />
@@ -99,6 +112,7 @@ function AddNewTodo({ newTodoData }) {
                     onChange={(event) => setAddTodoDescriptionInput(event.target.value)}
                     placeholder='Add description (optional)...'
                     className='add-todo-description'
+                    ref={todoTextarea}
                 />
                 <button 
                     onClick={addToddoButtonClicked}
