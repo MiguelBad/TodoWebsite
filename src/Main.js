@@ -78,8 +78,12 @@ function TodoApp() {
 }
 
 function TodoList ({ todoList, editedInfo, removedInfo, completeInfo, completedTodo }) {
-    const passEditedInfo = (todoTitle, todoDescription, oldTodo) => {
-        editedInfo(todoTitle, todoDescription, oldTodo)
+    // const passEditedInfo = (todoTitle, todoDescription, oldTodo) => {
+    //     editedInfo(todoTitle, todoDescription, oldTodo)
+    // }
+
+    const editCurrentTodo = (todo) => {
+        console.log(todo)
     }
 
     const passedDeleteInfo = (todo) => {
@@ -89,6 +93,35 @@ function TodoList ({ todoList, editedInfo, removedInfo, completeInfo, completedT
     const passedCompleteInfo = (todo) => {
         completeInfo(todo)
     }
+
+            // <div 
+            //     ref={editInput} 
+            //     style={{ display: 'none' }}
+            // >
+            //     <input
+            //         value = {editCurrentTodo}
+            //         onChange = {(event) => setEditCurrentTodo(event.target.value)} 
+            //     />
+            //     <input
+            //         value = {editCurrentTodoDescription}
+            //         onChange = {(event) => setEditCurrentTodoDescription(event.target.value)} 
+            //     />
+            //     <button onClick = {changeCurrentTodo}>Change</button>
+            // </div>
+    // const [oldTodo, setOldTodo] = useState("")
+    // const [editCurrentTodo, setEditCurrentTodo] = useState("")
+    // const [editCurrentTodoDescription, setEditCurrentTodoDescription] = useState("")
+    //
+    // useEffect(() => {
+    //     setEditCurrentTodo(currentTodo[0])
+    //     setEditCurrentTodoDescription(currentTodo[1] || "")
+    //     setOldTodo(currentTodo[0])
+    // }, [currentTodo])
+    //
+    // const changeCurrentTodo = () => {
+    //     editedInfo(editCurrentTodo, editCurrentTodoDescription, oldTodo) 
+    // }
+
 
     return (
         <ul>
@@ -106,7 +139,7 @@ function TodoList ({ todoList, editedInfo, removedInfo, completeInfo, completedT
                         <h2 className='todo-title'>{todo[0]}</h2>
                         <p className='todo-description'>{todo[1]}</p>
                         <section className='edit-remove-container'>
-                            <EditTodo currentTodo={todo} editedInfo={passEditedInfo}/>
+                            <EditTodo currentTodo={todo} editTodo={editCurrentTodo}/>
                             <RemoveTodo todoToDelete={passedDeleteInfo} todo={todo}/>
                             <CompleteTodo todoToComplete={passedCompleteInfo} todo={todo}/>
                         </section>
@@ -164,53 +197,23 @@ function AddNewTodo({ newTodoData }) {
     );
 }
 
-function EditTodo({ currentTodo, editedInfo }) {
-    const [oldTodo, setOldTodo] = useState("")
-    const [editCurrentTodo, setEditCurrentTodo] = useState("")
-    const [editCurrentTodoDescription, setEditCurrentTodoDescription] = useState("")
+function EditTodo({ currentTodo, editTodo }) {
     const [enableEditing, setEnableEditing] = useState(false)
-    const editInput = useRef(null)
     const editButton = useRef(null)
-
-    useEffect(() => {
-        setEditCurrentTodo(currentTodo[0])
-        setEditCurrentTodoDescription(currentTodo[1] || "")
-        setOldTodo(currentTodo[0])
-    }, [currentTodo])
-
-    const changeCurrentTodo = () => {
-        editedInfo(editCurrentTodo, editCurrentTodoDescription, oldTodo) 
-    }
 
     const showEditInput = () => {
         if (!enableEditing) {
-            editInput.current.style.display = 'block'
             editButton.current.innerText = 'Cancel'
             setEnableEditing(true)
         } else {
-            editInput.current.style.display = 'none'
             editButton.current.innerText = 'Edit'
             setEnableEditing(false)
         }
-
+        editTodo(currentTodo)
     }
 
     return (
         <section className='edit-section'>
-            <div 
-                ref={editInput} 
-                style={{ display: 'none' }}
-            >
-                <input
-                    value = {editCurrentTodo}
-                    onChange = {(event) => setEditCurrentTodo(event.target.value)} 
-                />
-                <input
-                    value = {editCurrentTodoDescription}
-                    onChange = {(event) => setEditCurrentTodoDescription(event.target.value)} 
-                />
-                <button onClick = {changeCurrentTodo}>Change</button>
-            </div>
             <button 
                 onClick = {showEditInput}
                 ref = {editButton}
