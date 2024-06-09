@@ -1,6 +1,3 @@
-// import { ConstructionSharp } from '@mui/icons-material';
-import { Remove, RemoveModeratorRounded } from '@mui/icons-material';
-import userEvent from '@testing-library/user-event';
 import { useEffect, useRef, useState } from 'react';
 import './index.css';
 
@@ -65,8 +62,8 @@ function TodoList ({ todoList, editedInfo, removedInfo }) {
             {todoList.map((todo, index) => 
                 <li key={index}>
                     <div className='todo-container'>
-                        <h2>{todo[0]}</h2>
-                        <p>{todo[1]}</p>
+                        <h2 className='todo-title'>{todo[0]}</h2>
+                        <p className='todo-description'>{todo[1]}</p>
                         <section className='edit-remove-container'>
                             <EditTodo currentTodo={todo} editedInfo={passEditedInfo}/>
                             <RemoveTodo todoToDelete={passedDeleteInfo} todo={todo}/>
@@ -81,6 +78,7 @@ function TodoList ({ todoList, editedInfo, removedInfo }) {
 function AddNewTodo({ newTodoData }) {
     const [addTodoInput, setAddTodoInput] = useState('')
     const [addTodoDescriptionInput, setAddTodoDescriptionInput] = useState('')
+    const todoTextbox = useRef(null)
 
     const addToddoButtonClicked = () => {
         newTodoData(addTodoInput, addTodoDescriptionInput) 
@@ -89,17 +87,24 @@ function AddNewTodo({ newTodoData }) {
 
     return (
         <section className='add-todo-section'>
-            <input 
-                value={addTodoInput}
-                onChange={(event) => setAddTodoInput(event.target.value)}
-                placeholder='Todo Title'
-            />
-            <textarea
-                value={addTodoDescriptionInput}
-                onChange={(event) => setAddTodoDescriptionInput(event.target.value)}
-                placeholder='Add description (optional)...'
-            />
-            <button onClick={addToddoButtonClicked}>Add Todo</button>
+            <div className='add-todo-container'>
+                <input 
+                    value={addTodoInput}
+                    onChange={(event) => setAddTodoInput(event.target.value)}
+                    placeholder='Todo Title'
+                    className='add-todo-title'
+                />
+                <textarea
+                    value={addTodoDescriptionInput}
+                    onChange={(event) => setAddTodoDescriptionInput(event.target.value)}
+                    placeholder='Add description (optional)...'
+                    className='add-todo-description'
+                />
+                <button 
+                    onClick={addToddoButtonClicked}
+                    className='add-todo-button'
+                >Add Todo</button>
+            </div>
         </section>
     );
 }

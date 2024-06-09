@@ -127,7 +127,7 @@ body {
         list-style: none;
     }
 
-    li {
+    li, .add-todo-section {
         width: 100%;
         margin: 0 0 1rem 0;
         padding: 1rem 0;
@@ -135,8 +135,50 @@ body {
         border-radius: 1rem;
 
         .todo-container {
-            box-sizing: border-box;
             padding: 0 2rem;
         }
     }
+
+    .todo-title {
+        font-weight: 400;
+    }
+
+    .todo-description {
+        font-weight: 300;
+    }
+
+    .edit-remove-container {
+        display: flex;
+        justify-content: end;
+    }
+
+    .add-todo-container {
+        display: flex;
+        flex-direction: column;
+        padding: 0 2rem;
+
+        .add-todo-title, .add-todo-description {
+            background-color: rgba(0, 0, 0, 0);
+            border: 0;
+            color: var(--text);
+        }
+
+        .add-todo-title::placeholder, .add-todo-description::placeholder {
+            color: rgba(256,256,256, 0.5);
+        }
+
+        .add-todo-title {
+            font-size: 1.5rem;
+        }
+
+        .add-todo-description {
+            font-size: 1rem;
+        }
+
+        .add-todo-button {
+            align-self: end;
+            width: 10rem;
+        }
+    }
+
 }
