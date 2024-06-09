@@ -1,9 +1,12 @@
+import { Crop169 } from '@mui/icons-material';
 import { useEffect, useRef, useState } from 'react';
 import './index.css';
 
 function TodoApp() {
     const [todoList, setTodoList] = useState([])
     const [savedTodoListLoaded, setSavedTodoListLoaded] = useState(false) 
+    const [completedTodo, setCompletedTodo] = useState([]) 
+    const [savedCompletededTodoLoaded, setSavedCompletededTodoLoaded] = useState(false) 
 
     useEffect(() => {
         const savedTodoList = JSON.parse(localStorage.getItem('savedTodoList')) || [];
@@ -14,6 +17,16 @@ function TodoApp() {
     useEffect(() => {
         savedTodoListLoaded === true && localStorage.setItem('savedTodoList', JSON.stringify(todoList))
     }, [todoList, savedTodoListLoaded])
+
+    useEffect(() => {
+        const savedCompletededTodo = JSON.parse(localStorage.getItem('savedCompletededTodo')) || []
+        setCompletedTodo(savedCompletededTodo)
+        setSavedCompletededTodoLoaded(true)
+    }, [])
+
+    useEffect(() => {
+        savedCompletededTodoLoaded === true && localStorage.setItem('savedCompletededTodo', JSON.stringify(completedTodo))
+    }, [completedTodo, savedCompletededTodoLoaded])
 
     const newTodoAdded = (todoTitle, todoDescription) => {
         if (todoTitle !== "" && todoList.filter(title => title[0] === todoTitle).length === 0) {
@@ -39,16 +52,25 @@ function TodoApp() {
         setTodoList(newList)
     }
 
+    const completeCurrentTodo = (todo) => {
+        setCompletedTodo([...completedTodo, todo[0]])
+    }
+
     return (
         <main className='main-content'>
             <h1 className='todo-category-title'>Todo Title Sample</h1>
-            <TodoList todoList={todoList} editedInfo={changeCurrentTodo} removedInfo={removeCurrentTodo}/>
+            <TodoList todoList={todoList} 
+                editedInfo={changeCurrentTodo} 
+                removedInfo={removeCurrentTodo} 
+                completeInfo={completeCurrentTodo}
+                completedTodo={completedTodo}
+            />
             <AddNewTodo newTodoData={newTodoAdded} />
         </main>
     );
 }
 
-function TodoList ({ todoList, editedInfo, removedInfo }) {
+function TodoList ({ todoList, editedInfo, removedInfo, completeInfo, completedTodo }) {
     const passEditedInfo = (todoTitle, todoDescription, oldTodo) => {
         editedInfo(todoTitle, todoDescription, oldTodo)
     }
@@ -57,16 +79,29 @@ function TodoList ({ todoList, editedInfo, removedInfo }) {
         removedInfo(todo)
     }
 
+    const passedCompleteInfo = (todo) => {
+        completeInfo(todo)
+    }
+
     return (
         <ul>
             {todoList.map((todo, index) => 
-                <li key={index}>
+                <li 
+                    style= {{ backgroundColor : 
+                     completedTodo.filter(item => item === todo[0]).length === 1 
+                        ? 'var(--secondary)'
+                        : 'var(--accent)'
+                    }}
+                    className='todo'
+                    key={index}
+                >
                     <div className='todo-container'>
                         <h2 className='todo-title'>{todo[0]}</h2>
                         <p className='todo-description'>{todo[1]}</p>
                         <section className='edit-remove-container'>
                             <EditTodo currentTodo={todo} editedInfo={passEditedInfo}/>
                             <RemoveTodo todoToDelete={passedDeleteInfo} todo={todo}/>
+                            <CompleteTodo todoToComplete={passedCompleteInfo} todo={todo}/>
                         </section>
                     </div>
                 </li>
@@ -184,6 +219,17 @@ function RemoveTodo ({ todo, todoToDelete }) {
 
     return (
         <button onClick={removeTodo}>Remove</button> 
+    )
+}
+
+
+function CompleteTodo ({ todo, todoToComplete }) {
+    const removeTodo = () => {
+        todoToComplete(todo)  
+    }
+
+    return (
+        <button onClick={removeTodo}>Complete</button> 
     )
 }
 
