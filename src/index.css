@@ -60,6 +60,7 @@ body {
         align-items: center;
        
         .menu-title {
+            font-weight: 500;
             font-size: 2rem;
         }
 
@@ -112,11 +113,30 @@ body {
 
 .main-content {
     box-sizing: border-box;
-    padding: 1.5rem;
+    padding: 1.5rem 2.5rem;
     width: 100%;
+    
+    .todo-category-title {
+        font-weight: 500;
+        margin: 2rem 0;
 
-    .todo-title {
-        margin: 2rem 0 0 0;
     }
 
+    ul {
+        padding: 0;
+        list-style: none;
+    }
+
+    li {
+        width: 100%;
+        margin: 0 0 1rem 0;
+        padding: 1rem 0;
+        background-color: var(--accent);
+        border-radius: 1rem;
+
+        .todo-container {
+            box-sizing: border-box;
+            padding: 0 2rem;
+        }
+    }
 }

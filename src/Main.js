@@ -44,7 +44,7 @@ function TodoApp() {
 
     return (
         <main className='main-content'>
-            <h1 className='todo-title'>Todo Title Sample</h1>
+            <h1 className='todo-category-title'>Todo Title Sample</h1>
             <TodoList todoList={todoList} editedInfo={changeCurrentTodo} removedInfo={removeCurrentTodo}/>
             <AddNewTodo newTodoData={newTodoAdded} />
         </main>
@@ -64,12 +64,14 @@ function TodoList ({ todoList, editedInfo, removedInfo }) {
         <ul>
             {todoList.map((todo, index) => 
                 <li key={index}>
-                    <h2>{todo[0]}</h2>
-                    <p>{todo[1]}</p>
-                    <section className='edit-remove-container'>
-                        <EditTodo currentTodo={todo} editedInfo={passEditedInfo}/>
-                        <RemoveTodo todoToDelete={passedDeleteInfo} todo={todo}/>
-                    </section>
+                    <div className='todo-container'>
+                        <h2>{todo[0]}</h2>
+                        <p>{todo[1]}</p>
+                        <section className='edit-remove-container'>
+                            <EditTodo currentTodo={todo} editedInfo={passEditedInfo}/>
+                            <RemoveTodo todoToDelete={passedDeleteInfo} todo={todo}/>
+                        </section>
+                    </div>
                 </li>
             )}
         </ul>
