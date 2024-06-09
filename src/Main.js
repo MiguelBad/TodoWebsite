@@ -168,6 +168,7 @@ function EditTodo({ currentTodo, editedInfo }) {
     const [oldTodo, setOldTodo] = useState("")
     const [editCurrentTodo, setEditCurrentTodo] = useState("")
     const [editCurrentTodoDescription, setEditCurrentTodoDescription] = useState("")
+    const [enableEditing, setEnableEditing] = useState(false)
     const editInput = useRef(null)
     const editButton = useRef(null)
 
@@ -182,13 +183,16 @@ function EditTodo({ currentTodo, editedInfo }) {
     }
 
     const showEditInput = () => {
-        editInput.current.style.display = 'block'
-        editButton.current.style.display = 'none'
-    }
+        if (!enableEditing) {
+            editInput.current.style.display = 'block'
+            editButton.current.innerText = 'Cancel'
+            setEnableEditing(true)
+        } else {
+            editInput.current.style.display = 'none'
+            editButton.current.innerText = 'Edit'
+            setEnableEditing(false)
+        }
 
-    const cancelEdit = () => {
-        editInput.current.style.display = 'none'
-        editButton.current.style.display = 'block'
     }
 
     return (
@@ -206,12 +210,10 @@ function EditTodo({ currentTodo, editedInfo }) {
                     onChange = {(event) => setEditCurrentTodoDescription(event.target.value)} 
                 />
                 <button onClick = {changeCurrentTodo}>Change</button>
-                <button onClick = {cancelEdit}>Cancel</button>
             </div>
             <button 
                 onClick = {showEditInput}
                 ref = {editButton}
-                style = {{ display: 'block' }}
             >
                 Edit
             </button>
