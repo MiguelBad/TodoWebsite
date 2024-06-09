@@ -85,7 +85,6 @@ function AddNewTodo({ newTodoData }) {
         todoTextarea.current.style.height = todoTextarea.current.scrollHeight + 'px'
     }, [addTodoDescriptionInput])
         
-
     const todoDescriptionChanged = (event) => {
         setAddTodoInput(event.target.value)
         todoTextarea.current.style.height = 'auto'
