@@ -1,5 +1,6 @@
 // import { ConstructionSharp } from '@mui/icons-material';
-import { useEffect, useState } from 'react';
+import userEvent from '@testing-library/user-event';
+import { useEffect, useRef, useState } from 'react';
 import './index.css';
 
 function TodoApp() {
@@ -89,6 +90,9 @@ function EditTodo({ currentTodo, editedInfo }) {
     const [oldTodo, setOldTodo] = useState("")
     const [editCurrentTodo, setEditCurrentTodo] = useState("")
     const [editCurrentTodoDescription, setEditCurrentTodoDescription] = useState("")
+    const [editInputShown, setEditInputShown] = useState(false)
+    const editInput = useRef(null)
+    const editButton = useRef(null)
 
     useEffect(() => {
         setEditCurrentTodo(currentTodo[0])
@@ -100,17 +104,42 @@ function EditTodo({ currentTodo, editedInfo }) {
         editedInfo(editCurrentTodo, editCurrentTodoDescription, oldTodo) 
     }
 
+    const showEditInput = () => {
+        editInput.current.style.display = 'block'
+        editButton.current.style.display = 'none'
+        setEditInputShown(true)
+    }
+
+    const cancelEdit = () => {
+        editInput.current.style.display = 'none'
+        editButton.current.style.display = 'block'
+        setEditInputShown(false)
+    }
+
     return (
         <section className='edit-section'>
-            <input
-                value = {editCurrentTodo}
-                onChange = {(event) => setEditCurrentTodo(event.target.value)} 
-            />
-            <input
-                value = {editCurrentTodoDescription}
-                onChange = {(event) => setEditCurrentTodoDescription(event.target.value)} 
-            />
-            <button onClick={changeCurrentTodo}>Edit</button>
+            <div 
+                ref={editInput} 
+                style={{ display: 'none' }}
+            >
+                <input
+                    value = {editCurrentTodo}
+                    onChange = {(event) => setEditCurrentTodo(event.target.value)} 
+                />
+                <input
+                    value = {editCurrentTodoDescription}
+                    onChange = {(event) => setEditCurrentTodoDescription(event.target.value)} 
+                />
+                <button onClick = {changeCurrentTodo}>Change</button>
+                <button onClick = {cancelEdit}>Cancel</button>
+            </div>
+            <button 
+                onClick = {showEditInput}
+                ref = {editButton}
+                style = {{ display: 'block' }}
+            >
+                Edit
+            </button>
         </section>
     )
 }
