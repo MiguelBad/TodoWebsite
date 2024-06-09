@@ -82,6 +82,7 @@ function AddNewTodo({ newTodoData }) {
 
     const addToddoButtonClicked = () => {
         newTodoData(addTodoInput, addTodoDescriptionInput) 
+        setAddTodoInput('')
     }
 
     return (
