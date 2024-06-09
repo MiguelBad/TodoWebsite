@@ -23,10 +23,14 @@ function TodoApp() {
     }
 
     const changeCurrentTodo = (todoTitle, todoDescription, oldTodo) => {
-        const index = todoList.findIndex(item => item[0] === oldTodo);
-        const newList = [...todoList]
-        newList[index] = [todoTitle, todoDescription]
-        setTodoList(newList)
+        if (todoTitle !== "" ) {
+            if (oldTodo === todoTitle || todoList.filter(title => title[0] === todoTitle).length === 0 ) {
+                const index = todoList.findIndex(item => item[0] === oldTodo);
+                const newList = [...todoList]
+                newList[index] = [todoTitle, todoDescription]
+                setTodoList(newList)
+            }
+        }
     }
 
     return (
