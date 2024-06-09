@@ -1,4 +1,5 @@
 // import { ConstructionSharp } from '@mui/icons-material';
+import { Remove, RemoveModeratorRounded } from '@mui/icons-material';
 import userEvent from '@testing-library/user-event';
 import { useEffect, useRef, useState } from 'react';
 import './index.css';
@@ -34,18 +35,29 @@ function TodoApp() {
         }
     }
 
+    const removeCurrentTodo = (todo) => {
+        const index = todoList.findIndex(item => item[0] === todo[0])
+        const newList = [...todoList]
+        newList.splice(index, 1)
+        setTodoList(newList)
+    }
+
     return (
         <main className='main-content'>
             <h1 className='todo-title'>Todo Title Sample</h1>
-            <TodoList todoList={todoList} editedInfo={changeCurrentTodo} />
+            <TodoList todoList={todoList} editedInfo={changeCurrentTodo} removedInfo={removeCurrentTodo}/>
             <AddNewTodo newTodoData={newTodoAdded} />
         </main>
     );
 }
 
-function TodoList ({ todoList, editedInfo }) {
+function TodoList ({ todoList, editedInfo, removedInfo }) {
     const passEditedInfo = (todoTitle, todoDescription, oldTodo) => {
         editedInfo(todoTitle, todoDescription, oldTodo)
+    }
+
+    const passedDeleteInfo = (todo) => {
+        removedInfo(todo)
     }
 
     return (
@@ -54,7 +66,10 @@ function TodoList ({ todoList, editedInfo }) {
                 <li key={index}>
                     <h2>{todo[0]}</h2>
                     <p>{todo[1]}</p>
-                    <EditTodo currentTodo={todo} editedInfo={passEditedInfo}/>
+                    <section className='edit-remove-container'>
+                        <EditTodo currentTodo={todo} editedInfo={passEditedInfo}/>
+                        <RemoveTodo todoToDelete={passedDeleteInfo} todo={todo}/>
+                    </section>
                 </li>
             )}
         </ul>
@@ -90,7 +105,6 @@ function EditTodo({ currentTodo, editedInfo }) {
     const [oldTodo, setOldTodo] = useState("")
     const [editCurrentTodo, setEditCurrentTodo] = useState("")
     const [editCurrentTodoDescription, setEditCurrentTodoDescription] = useState("")
-    const [editInputShown, setEditInputShown] = useState(false)
     const editInput = useRef(null)
     const editButton = useRef(null)
 
@@ -107,13 +121,11 @@ function EditTodo({ currentTodo, editedInfo }) {
     const showEditInput = () => {
         editInput.current.style.display = 'block'
         editButton.current.style.display = 'none'
-        setEditInputShown(true)
     }
 
     const cancelEdit = () => {
         editInput.current.style.display = 'none'
         editButton.current.style.display = 'block'
-        setEditInputShown(false)
     }
 
     return (
@@ -141,6 +153,16 @@ function EditTodo({ currentTodo, editedInfo }) {
                 Edit
             </button>
         </section>
+    )
+}
+
+function RemoveTodo ({ todo, todoToDelete }) {
+    const removeTodo = () => {
+        todoToDelete(todo)  
+    }
+
+    return (
+        <button onClick={removeTodo}>Remove</button> 
     )
 }
 
