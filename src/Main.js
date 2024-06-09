@@ -53,7 +53,14 @@ function TodoApp() {
     }
 
     const completeCurrentTodo = (todo) => {
-        setCompletedTodo([...completedTodo, todo[0]])
+        if (!completedTodo.includes(todo[0])) {
+            setCompletedTodo([...completedTodo, todo[0]])
+        } else {
+            const index = completedTodo.indexOf(todo[0])
+            const newList = [...completedTodo]
+            newList.splice(index, 1)
+            setCompletedTodo(newList)
+        }
     }
 
     return (
