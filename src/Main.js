@@ -1,4 +1,5 @@
 // import { Crop169 } from '@mui/icons-material';
+import { CircleNotificationsSharp } from '@mui/icons-material';
 import { useEffect, useRef, useState } from 'react';
 import './index.css';
 
@@ -81,34 +82,17 @@ function TodoList ({ todoList, editedInfo, removedInfo, completeInfo, completedT
     // const passEditedInfo = (todoTitle, todoDescription, oldTodo) => {
     //     editedInfo(todoTitle, todoDescription, oldTodo)
     // }
-    const [editEnabled, setEditEnabled] = useState(false)
-    const [editedTitle, setEditedTitle] = useState("")
-    const [editedDescription, setEditedDescription] = useState("")
-    const todoTitle = useRef(null)
-    const todoDescription = useRef(null)
-    const editTodoTitle = useRef(null)
-    const editTodoDescription = useRef(null)
-
-    const editCurrentTodo = (todo, toggle) => { 
-        if (!editEnabled) {
-            todoTitle.current.style.display = "none"
-            todoDescription.current.style.display = "none"
-            editTodoTitle.current.style.display = "block"
-            editTodoDescription.current.style.display = "block"
-            setEditEnabled(true) 
-        } else {
-            todoTitle.current.style.display = "block"
-            todoDescription.current.style.display = "block"
-            editTodoTitle.current.style.display = "none"
-            editTodoDescription.current.style.display = "none"
-            setEditEnabled(false)
-        }
-    }
-
                                     // <button onClick = {changeCurrentTodo}>Change</button>
     // const changeCurrentTodo = () => {
     //     editedInfo(editCurrentTodo, editCurrentTodoDescription, oldTodo) 
     // }
+    const [editTodoInstance, setEditTodoInstance] = useState([])
+    const [toggleEdit, setToggleEdit] = useState(false)
+
+    const editCurrentTodo = (todo, toggle) => { 
+        setEditTodoInstance(todo)
+        !toggleEdit ? setToggleEdit(true) : setToggleEdit(false)
+    }
 
     const passedDeleteInfo = (todo) => {
         removedInfo(todo)
@@ -141,6 +125,10 @@ function TodoList ({ todoList, editedInfo, removedInfo, completeInfo, completedT
                     key={index}
                 >
                     <div className='todo-container'>
+                        <TodoInstance 
+                            editInstance={editTodoInstance} 
+                            isEditable={toggleEdit}
+                            todo={todo}/>
                         <section className='edit-remove-container'>
                             <EditTodo currentTodo={todo} editTodo={editCurrentTodo}/>
                             <RemoveTodo todoToDelete={passedDeleteInfo} todo={todo}/>
@@ -153,12 +141,19 @@ function TodoList ({ todoList, editedInfo, removedInfo, completeInfo, completedT
     )
 }
 
-function TodoInstance() {
-   return (
+function TodoInstance({ todo, editInstance, isEditable }) {
+    const [editedTitle, setEditedTitle] = useState("")
+    const [editedDescription, setEditedDescription] = useState("")
+    const todoTitle = useRef(null)
+    const todoDescription = useRef(null)
+    const editTodoTitle = useRef(null)
+    const editTodoDescription = useRef(null)
+
+    return (
         <section className='todo-information-or-input'>
             <h2 
                 ref={todoTitle} 
-                style={{ display: 'block' }}
+                style={{ display: { isEditable ? 'none' : 'block' }}}
                 className='todo-title'>{todo[0]}</h2>
             <p 
                 ref={todoDescription} 
@@ -177,7 +172,7 @@ function TodoInstance() {
                 onChange = {(event) => setEditedDescription(event.target.value)} 
             />
         </section>
-   )
+    )
 }
 
 function AddNewTodo({ newTodoData }) {
