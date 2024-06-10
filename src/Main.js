@@ -1,3 +1,4 @@
+import { ConnectingAirports } from '@mui/icons-material';
 import { forwardRef, useEffect, useRef, useState } from 'react';
 import './index.css';
 
@@ -92,6 +93,7 @@ function TodoList ({ todoList, editedInfo, removedInfo, completeInfo, completedT
     const [editedTitle, setEditedTitle] = useState("")
     const [editedDescription, setEditedDescription] = useState("")
     const [todoBeingEdited,  setTodoBeingEdited] = useState([])
+    const [cancelOtherEdits, setCancelOtherEdits] = useState([])
 
     const todoInfoElement = useRef([])
     const todoEditElement = useRef([])
@@ -110,6 +112,7 @@ function TodoList ({ todoList, editedInfo, removedInfo, completeInfo, completedT
             setTodoBeingEdited([])
             setEditedTitle('')
             setEditedDescription('')
+            setCancelOtherEdits([false, index])
         } else {
             todoInfoElement.current[todoBeingEdited[1]].style.display = 'block'
             todoEditElement.current[todoBeingEdited[1]].style.display = 'none'
@@ -118,6 +121,7 @@ function TodoList ({ todoList, editedInfo, removedInfo, completeInfo, completedT
             setTodoBeingEdited([todo[0], index])
             setEditedTitle(todo[0])
             setEditedDescription(todo[1] || '')
+            setCancelOtherEdits([true, index])
         }
     }
 
@@ -178,6 +182,7 @@ function TodoList ({ todoList, editedInfo, removedInfo, completeInfo, completedT
                                 currentTodo={todo} 
                                 editTodo={toggleEditToCurrentTodo}
                                 index={index}
+                                cancelOtherEdits={cancelOtherEdits}
                             />
                             <RemoveTodo todoToDelete={passedDeleteInfo} todo={todo}/>
                             <CompleteTodo todoToComplete={passedCompleteInfo} todo={todo}/>
@@ -238,6 +243,12 @@ function AddNewTodo({ newTodoData }) {
 
 const EditTodo = forwardRef(function EditTodo(props, ref) {
     const [enableEditing, setEnableEditing] = useState(false)
+
+    useEffect(() => {
+        if (props.cancelOtherEdits && props.index !== props.cancelOtherEdits[1]) {
+            setEnableEditing(false)
+        }
+    }, [props.cancelOtherEdits, props.index])
 
     const showEditInput = () => {
         enableEditing ? setEnableEditing(false) : setEnableEditing(true)
