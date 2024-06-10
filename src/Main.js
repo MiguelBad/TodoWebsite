@@ -78,22 +78,11 @@ function TodoApp() {
 }
 
 function TodoList ({ todoList, editedInfo, removedInfo, completeInfo, completedTodo }) {
-    // const passEditedInfo = (todoTitle, todoDescription, oldTodo) => {
-    //     editedInfo(todoTitle, todoDescription, oldTodo)
-    // }
-
-    //    // const [oldTodo, setOldTodo] = useState("")
-    //
-    // useEffect(() => {
-    //     setEditCurrentTodo(currentTodo[0])
-    //     setEditCurrentTodoDescription(currentTodo[1] || "")
-    //     setOldTodo(currentTodo[0])
-    // }, [currentTodo])
-    //
     const [editedTitle, setEditedTitle] = useState("")
     const [editedDescription, setEditedDescription] = useState("")
     const [todoBeingEdited,  setTodoBeingEdited] = useState([])
     const [cancelOtherEdits, setCancelOtherEdits] = useState([])
+    const [oldTodo, setOldTodo] = useState([])
 
     const todoInfoElement = useRef([])
     const todoEditElement = useRef([])
@@ -103,6 +92,7 @@ function TodoList ({ todoList, editedInfo, removedInfo, completeInfo, completedT
         if (todoBeingEdited[0] === undefined) {
             todoInfoElement.current[index].style.display = 'none'
             todoEditElement.current[index].style.display = 'block'
+            setOldTodo(todo[0])
             setTodoBeingEdited([todo[0], index])
             setEditedTitle(todo[0])
             setEditedDescription(todo[1] || '')
@@ -118,6 +108,7 @@ function TodoList ({ todoList, editedInfo, removedInfo, completeInfo, completedT
             todoEditElement.current[todoBeingEdited[1]].style.display = 'none'
             todoInfoElement.current[index].style.display = 'none'
             todoEditElement.current[index].style.display = 'block'
+            setOldTodo(todo[0])
             setTodoBeingEdited([todo[0], index])
             setEditedTitle(todo[0])
             setEditedDescription(todo[1] || '')
@@ -125,9 +116,16 @@ function TodoList ({ todoList, editedInfo, removedInfo, completeInfo, completedT
         }
     }
 
-    const changeCurrentTodo = () => {
-        console.log('yay')
-        // editedinfo(editcurrenttodo, editcurrenttododescription, oldtodo) 
+    const changeCurrentTodo = (todo, index) => {
+        if (editedTitle !== "" ) {
+            if (oldTodo === editedTitle || todoList.filter(title => title[0] === editedTitle).length === 0 ) {
+                todoInfoElement.current[index].style.display = 'block'
+                todoEditElement.current[index].style.display = 'none'
+                setCancelOtherEdits([true, null])
+                setTodoBeingEdited([])
+                editedInfo(editedTitle, editedDescription, oldTodo) 
+            }
+        }
     }
 
     const passedDeleteInfo = (todo) => {
@@ -173,7 +171,7 @@ function TodoList ({ todoList, editedInfo, removedInfo, completeInfo, completedT
                                     value = {editedDescription}
                                     onChange = {(event) => setEditedDescription(event.target.value)} 
                                 />
-                                <button onClick = {changeCurrentTodo}>Change</button>
+                                <button onClick = {() => changeCurrentTodo(todo, index)}>Change</button>
                             </section>
                         </div>
                         <section className='edit-remove-container'>
@@ -245,8 +243,10 @@ const EditTodo = forwardRef(function EditTodo(props, ref) {
     const [enableEditing, setEnableEditing] = useState(false)
 
     useEffect(() => {
-        if (props.cancelOtherEdits && props.index !== props.cancelOtherEdits[1]) {
-            setEnableEditing(false)
+        if (props.cancelOtherEdits) {
+            if (props.index !== props.cancelOtherEdits[1] || props.index === null) {
+                setEnableEditing(false)
+            }
         }
     }, [props.cancelOtherEdits, props.index])
 
