@@ -1,6 +1,4 @@
-// import { Crop169 } from '@mui/icons-material';
-import { CircleNotificationsSharp } from '@mui/icons-material';
-import { useEffect, useRef, useState } from 'react';
+import { forwardRef, useEffect, useRef, useState } from 'react';
 import './index.css';
 
 function TodoApp() {
@@ -86,12 +84,29 @@ function TodoList ({ todoList, editedInfo, removedInfo, completeInfo, completedT
     // const changeCurrentTodo = () => {
     //     editedInfo(editCurrentTodo, editCurrentTodoDescription, oldTodo) 
     // }
-    const [editTodoInstance, setEditTodoInstance] = useState([])
-    const [toggleEdit, setToggleEdit] = useState(false)
+    //    // const [oldTodo, setOldTodo] = useState("")
+    //
+    // useEffect(() => {
+    //     setEditCurrentTodo(currentTodo[0])
+    //     setEditCurrentTodoDescription(currentTodo[1] || "")
+    //     setOldTodo(currentTodo[0])
+    // }, [currentTodo])
+    //
+    const [editedTitle, setEditedTitle] = useState("")
+    const [editedDescription, setEditedDescription] = useState("")
 
-    const editCurrentTodo = (todo, toggle) => { 
-        setEditTodoInstance(todo)
-        !toggleEdit ? setToggleEdit(true) : setToggleEdit(false)
+    const todoInfoElement = useRef([])
+    const todoEditElement = useRef([])
+    const editButton = useRef([])
+
+    const toggleEditToCurrentTodo = (todo, isEditing, index) => { 
+        if (todoInfoElement.current[index].style.display === 'block') {
+            todoInfoElement.current[index].style.display = 'none'
+            todoEditElement.current[index].style.display = 'block'
+        } else {
+            todoInfoElement.current[index].style.display = 'block'
+            todoEditElement.current[index].style.display = 'none'
+        }
     }
 
     const passedDeleteInfo = (todo) => {
@@ -101,16 +116,6 @@ function TodoList ({ todoList, editedInfo, removedInfo, completeInfo, completedT
     const passedCompleteInfo = (todo) => {
         completeInfo(todo)
     }
-
-    // const [oldTodo, setOldTodo] = useState("")
-    //
-    // useEffect(() => {
-    //     setEditCurrentTodo(currentTodo[0])
-    //     setEditCurrentTodoDescription(currentTodo[1] || "")
-    //     setOldTodo(currentTodo[0])
-    // }, [currentTodo])
-    //
-
 
     return (
         <ul>
@@ -125,12 +130,37 @@ function TodoList ({ todoList, editedInfo, removedInfo, completeInfo, completedT
                     key={index}
                 >
                     <div className='todo-container'>
-                        <TodoInstance 
-                            editInstance={editTodoInstance} 
-                            isEditable={toggleEdit}
-                            todo={todo}/>
+                        <div className='todo-information-or-input'>
+                            <section 
+                                ref={(element) => (todoInfoElement.current[index] = element)}
+                                style={{ display: 'block' }}
+                                className='todo-information'
+                            >
+                                <h2 className='todo-title'>{todo[0]}</h2>
+                                <p className='todo-description'>{todo[1]}</p>
+                            </section>
+                            <section 
+                                ref={(element) => (todoEditElement.current[index] = element)}
+                                style={{ display: 'none' }}
+                                className='edit-todo-input'
+                            >
+                                <input
+                                    value = {todo}
+                                    onChange = {(event) => setEditedTitle(event.target.value)} 
+                                />
+                                <input
+                                    value = {todo}
+                                    onChange = {(event) => setEditedDescription(event.target.value)} 
+                                />
+                            </section>
+                        </div>
                         <section className='edit-remove-container'>
-                            <EditTodo currentTodo={todo} editTodo={editCurrentTodo}/>
+                            <EditTodo 
+                                ref={(element) => (editButton.current[index] = element) }
+                                currentTodo={todo} 
+                                editTodo={toggleEditToCurrentTodo}
+                                index={index}
+                            />
                             <RemoveTodo todoToDelete={passedDeleteInfo} todo={todo}/>
                             <CompleteTodo todoToComplete={passedCompleteInfo} todo={todo}/>
                         </section>
@@ -141,39 +171,39 @@ function TodoList ({ todoList, editedInfo, removedInfo, completeInfo, completedT
     )
 }
 
-function TodoInstance({ todo, editInstance, isEditable }) {
+const TodoInstance = forwardRef(function TodoInstance(props, ref) {
     const [editedTitle, setEditedTitle] = useState("")
     const [editedDescription, setEditedDescription] = useState("")
-    const todoTitle = useRef(null)
-    const todoDescription = useRef(null)
-    const editTodoTitle = useRef(null)
-    const editTodoDescription = useRef(null)
 
     return (
-        <section className='todo-information-or-input'>
-            <h2 
-                ref={todoTitle} 
-                style={{ display: { isEditable ? 'none' : 'block' }}}
-                className='todo-title'>{todo[0]}</h2>
-            <p 
-                ref={todoDescription} 
+        <div 
+            ref={ref}
+            className='todo-information-or-input'
+        >
+            <section 
+                
                 style={{ display: 'block' }}
-                className='todo-description'>{todo[1]}</p>
-            <input
-                ref={editTodoTitle}
+                className='todo-information'
+            >
+                <h2 className='todo-title'>{props.todo[0]}</h2>
+                <p className='todo-description'>{props.todo[1]}</p>
+            </section>
+            <section 
                 style={{ display: 'none' }}
-                value = {todo}
-                onChange = {(event) => setEditedTitle(event.target.value)} 
-            />
-            <input
-                ref={editTodoDescription}
-                style={{ display: 'none' }}
-                value = {todo}
-                onChange = {(event) => setEditedDescription(event.target.value)} 
-            />
-        </section>
+                className='edit-todo-input'
+            >
+                <input
+                    value = {props.todo}
+                    onChange = {(event) => setEditedTitle(event.target.value)} 
+                />
+                <input
+                    value = {props.todo}
+                    onChange = {(event) => setEditedDescription(event.target.value)} 
+                />
+            </section>
+        </div>
     )
-}
+})
 
 function AddNewTodo({ newTodoData }) {
     const [addTodoInput, setAddTodoInput] = useState('')
@@ -222,32 +252,25 @@ function AddNewTodo({ newTodoData }) {
     );
 }
 
-function EditTodo({ currentTodo, editTodo }) {
+const EditTodo = forwardRef(function EditTodo(props, ref) {
     const [enableEditing, setEnableEditing] = useState(false)
-    const editButton = useRef(null)
 
     const showEditInput = () => {
-        if (!enableEditing) {
-            editButton.current.innerText = 'Cancel'
-            setEnableEditing(true)
-        } else {
-            editButton.current.innerText = 'Edit'
-            setEnableEditing(false)
-        }
-        editTodo(currentTodo, enableEditing)
+        enableEditing ? setEnableEditing(false) : setEnableEditing(true)
+        props.editTodo(props.currentTodo, enableEditing, props.index)
     }
 
     return (
         <section className='edit-section'>
             <button 
                 onClick = {showEditInput}
-                ref = {editButton}
+                ref = {ref}
             >
-                Edit
+                { enableEditing ? 'Cancel' : 'Edit' }
             </button>
         </section>
     )
-}
+})
 
 function RemoveTodo ({ todo, todoToDelete }) {
     const removeTodo = () => {
