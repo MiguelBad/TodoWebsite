@@ -102,16 +102,22 @@ function TodoList ({ todoList, editedInfo, removedInfo, completeInfo, completedT
             todoInfoElement.current[index].style.display = 'none'
             todoEditElement.current[index].style.display = 'block'
             setTodoBeingEdited([todo[0], index])
+            setEditedTitle(todo[0])
+            setEditedDescription(todo[1] || '')
         } else if (todoBeingEdited[0] === todo[0]) {
             todoInfoElement.current[index].style.display = 'block'
             todoEditElement.current[index].style.display = 'none'
             setTodoBeingEdited([])
+            setEditedTitle('')
+            setEditedDescription('')
         } else {
             todoInfoElement.current[todoBeingEdited[1]].style.display = 'block'
             todoEditElement.current[todoBeingEdited[1]].style.display = 'none'
             todoInfoElement.current[index].style.display = 'none'
             todoEditElement.current[index].style.display = 'block'
             setTodoBeingEdited([todo[0], index])
+            setEditedTitle(todo[0])
+            setEditedDescription(todo[1] || '')
         }
     }
 
@@ -156,9 +162,11 @@ function TodoList ({ todoList, editedInfo, removedInfo, completeInfo, completedT
                                 className='edit-todo-input'
                             >
                                 <input
+                                    value = {editedTitle}
                                     onChange = {(event) => setEditedTitle(event.target.value)} 
                                 />
                                 <input
+                                    value = {editedDescription}
                                     onChange = {(event) => setEditedDescription(event.target.value)} 
                                 />
                                 <button onClick = {changeCurrentTodo}>Change</button>
