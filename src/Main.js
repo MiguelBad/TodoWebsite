@@ -80,10 +80,7 @@ function TodoList ({ todoList, editedInfo, removedInfo, completeInfo, completedT
     // const passEditedInfo = (todoTitle, todoDescription, oldTodo) => {
     //     editedInfo(todoTitle, todoDescription, oldTodo)
     // }
-                                    // <button onClick = {changeCurrentTodo}>Change</button>
-    // const changeCurrentTodo = () => {
-    //     editedInfo(editCurrentTodo, editCurrentTodoDescription, oldTodo) 
-    // }
+
     //    // const [oldTodo, setOldTodo] = useState("")
     //
     // useEffect(() => {
@@ -94,19 +91,33 @@ function TodoList ({ todoList, editedInfo, removedInfo, completeInfo, completedT
     //
     const [editedTitle, setEditedTitle] = useState("")
     const [editedDescription, setEditedDescription] = useState("")
+    const [todoBeingEdited,  setTodoBeingEdited] = useState([])
 
     const todoInfoElement = useRef([])
     const todoEditElement = useRef([])
     const editButton = useRef([])
 
     const toggleEditToCurrentTodo = (todo, isEditing, index) => { 
-        if (todoInfoElement.current[index].style.display === 'block') {
+        if (todoBeingEdited[0] === undefined) {
             todoInfoElement.current[index].style.display = 'none'
             todoEditElement.current[index].style.display = 'block'
-        } else {
+            setTodoBeingEdited([todo[0], index])
+        } else if (todoBeingEdited[0] === todo[0]) {
             todoInfoElement.current[index].style.display = 'block'
             todoEditElement.current[index].style.display = 'none'
+            setTodoBeingEdited([])
+        } else {
+            todoInfoElement.current[todoBeingEdited[1]].style.display = 'block'
+            todoEditElement.current[todoBeingEdited[1]].style.display = 'none'
+            todoInfoElement.current[index].style.display = 'none'
+            todoEditElement.current[index].style.display = 'block'
+            setTodoBeingEdited([todo[0], index])
         }
+    }
+
+    const changeCurrentTodo = () => {
+        console.log('yay')
+        // editedinfo(editcurrenttodo, editcurrenttododescription, oldtodo) 
     }
 
     const passedDeleteInfo = (todo) => {
@@ -145,13 +156,12 @@ function TodoList ({ todoList, editedInfo, removedInfo, completeInfo, completedT
                                 className='edit-todo-input'
                             >
                                 <input
-                                    value = {todo}
                                     onChange = {(event) => setEditedTitle(event.target.value)} 
                                 />
                                 <input
-                                    value = {todo}
                                     onChange = {(event) => setEditedDescription(event.target.value)} 
                                 />
+                                <button onClick = {changeCurrentTodo}>Change</button>
                             </section>
                         </div>
                         <section className='edit-remove-container'>
@@ -170,40 +180,6 @@ function TodoList ({ todoList, editedInfo, removedInfo, completeInfo, completedT
         </ul>
     )
 }
-
-const TodoInstance = forwardRef(function TodoInstance(props, ref) {
-    const [editedTitle, setEditedTitle] = useState("")
-    const [editedDescription, setEditedDescription] = useState("")
-
-    return (
-        <div 
-            ref={ref}
-            className='todo-information-or-input'
-        >
-            <section 
-                
-                style={{ display: 'block' }}
-                className='todo-information'
-            >
-                <h2 className='todo-title'>{props.todo[0]}</h2>
-                <p className='todo-description'>{props.todo[1]}</p>
-            </section>
-            <section 
-                style={{ display: 'none' }}
-                className='edit-todo-input'
-            >
-                <input
-                    value = {props.todo}
-                    onChange = {(event) => setEditedTitle(event.target.value)} 
-                />
-                <input
-                    value = {props.todo}
-                    onChange = {(event) => setEditedDescription(event.target.value)} 
-                />
-            </section>
-        </div>
-    )
-})
 
 function AddNewTodo({ newTodoData }) {
     const [addTodoInput, setAddTodoInput] = useState('')
