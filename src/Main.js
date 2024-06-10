@@ -35,14 +35,10 @@ function TodoApp() {
     }
 
     const changeCurrentTodo = (todoTitle, todoDescription, oldTodo) => {
-        if (todoTitle !== "" ) {
-            if (oldTodo === todoTitle || todoList.filter(title => title[0] === todoTitle).length === 0 ) {
-                const index = todoList.findIndex(item => item[0] === oldTodo);
-                const newList = [...todoList]
-                newList[index] = [todoTitle, todoDescription]
-                setTodoList(newList)
-            }
-        }
+        const index = todoList.findIndex(item => item[0] === oldTodo);
+        const newList = [...todoList]
+        newList[index] = [todoTitle, todoDescription]
+        setTodoList(newList)
     }
 
     const removeCurrentTodo = (todo) => {
@@ -161,20 +157,28 @@ function TodoList ({ todoList, editedInfo, removedInfo, completeInfo, completedT
                             <section 
                                 ref={(element) => (todoEditElement.current[index] = element)}
                                 style={{ display: 'none' }}
-                                className='edit-todo-input'
                             >
-                                <input
-                                    value = {editedTitle}
-                                    onChange = {(event) => setEditedTitle(event.target.value)} 
-                                />
-                                <input
-                                    value = {editedDescription}
-                                    onChange = {(event) => setEditedDescription(event.target.value)} 
-                                />
-                                <button onClick = {() => changeCurrentTodo(todo, index)}>Change</button>
+                                <div className='edit-todo-input'>
+                                    <input
+                                        className='edit-title-input'
+                                        value = {editedTitle}
+                                        onChange = {(event) => setEditedTitle(event.target.value)} 
+                                    />
+                                    <input
+                                        className='edit-description-input'
+                                        value = {editedDescription}
+                                        onChange = {(event) => setEditedDescription(event.target.value)} 
+                                    />
+                                    <button 
+                                        className='edit-button'
+                                        onClick = {() => changeCurrentTodo(todo, index)}
+                                    >
+                                        Change
+                                    </button>
+                                </div>
                             </section>
                         </div>
-                        <section className='edit-remove-container'>
+                        <section className='edit-remove-complete-container'>
                             <EditTodo 
                                 ref={(element) => (editButton.current[index] = element) }
                                 currentTodo={todo} 

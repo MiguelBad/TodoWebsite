@@ -28,6 +28,10 @@ body {
     margin: 0;
     padding: 0;
 
+    input, textarea {
+        font-family: 'Poppins';
+    }
+
     h1, h2, h3, h4, h5, h6, p, li, ul {
         margin-top: 0;
         margin-bottom: 0;
@@ -58,7 +62,7 @@ body {
         margin: 2rem 0 ;
         justify-content: space-between;
         align-items: center;
-       
+
         .menu-title {
             font-weight: 500;
             font-size: 2rem;
@@ -84,7 +88,7 @@ body {
         .introduction {
             margin: 0 0 0.5rem 0;
         }
-        
+
         .username {
             font-weight: 600;
             font-size: 1.5rem;
@@ -115,7 +119,7 @@ body {
     box-sizing: border-box;
     padding: 1.5rem 2.5rem;
     width: calc(100% - 18rem);
-    
+
     .todo-category-title {
         font-weight: 500;
         margin: 2rem 0;
@@ -146,9 +150,10 @@ body {
     .todo-description {
         font-weight: 300;
         word-wrap: break-word;
+        margin: 1rem 0 0 0;
     }
 
-    .edit-remove-container {
+    .edit-remove-complete-container {
         display: flex;
         justify-content: end;
     }
@@ -174,6 +179,7 @@ body {
 
         .add-todo-description {
             font-size: 1rem;
+            height: 25px;
         }
 
         .add-todo-button {
@@ -182,4 +188,35 @@ body {
         }
     }
 
+    .edit-todo-input {
+        display: flex; 
+        flex-direction: column;
+
+        .edit-title-input {
+            font-size: 1.5rem;
+            color: var(--text);
+            background-color: var(--accent); 
+            border-bottom: 1px solid rgba(256,256,256, 0.5);
+            border-top: 0;
+            border-left: 0;
+            border-right: 0;
+            padding: 0 0 0.5rem 0;
+        }
+
+        .edit-description-input {
+            font-size: 1rem; 
+            color: var(--text);
+            background-color: var(--accent);
+            border-bottom: 1px solid rgba(256,256,256, 0.5);
+            border-top: 0;
+            border-left: 0;
+            border-right: 0;
+            padding: 0.5rem 0;
+            margin: 0.5rem 0;
+        }
+
+        .edit-button {
+            width: 10rem;
+        }
+    }
 }
