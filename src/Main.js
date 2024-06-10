@@ -1,4 +1,4 @@
-import { Crop169 } from '@mui/icons-material';
+// import { Crop169 } from '@mui/icons-material';
 import { useEffect, useRef, useState } from 'react';
 import './index.css';
 
@@ -81,10 +81,34 @@ function TodoList ({ todoList, editedInfo, removedInfo, completeInfo, completedT
     // const passEditedInfo = (todoTitle, todoDescription, oldTodo) => {
     //     editedInfo(todoTitle, todoDescription, oldTodo)
     // }
+    const [editEnabled, setEditEnabled] = useState(false)
+    const [editedTitle, setEditedTitle] = useState("")
+    const [editedDescription, setEditedDescription] = useState("")
+    const todoTitle = useRef(null)
+    const todoDescription = useRef(null)
+    const editTodoTitle = useRef(null)
+    const editTodoDescription = useRef(null)
 
-    const editCurrentTodo = (todo) => {
-        console.log(todo)
+    const editCurrentTodo = (todo, toggle) => { 
+        if (!editEnabled) {
+            todoTitle.current.style.display = "none"
+            todoDescription.current.style.display = "none"
+            editTodoTitle.current.style.display = "block"
+            editTodoDescription.current.style.display = "block"
+            setEditEnabled(true) 
+        } else {
+            todoTitle.current.style.display = "block"
+            todoDescription.current.style.display = "block"
+            editTodoTitle.current.style.display = "none"
+            editTodoDescription.current.style.display = "none"
+            setEditEnabled(false)
+        }
     }
+
+                                    // <button onClick = {changeCurrentTodo}>Change</button>
+    // const changeCurrentTodo = () => {
+    //     editedInfo(editCurrentTodo, editCurrentTodoDescription, oldTodo) 
+    // }
 
     const passedDeleteInfo = (todo) => {
         removedInfo(todo)
@@ -94,23 +118,7 @@ function TodoList ({ todoList, editedInfo, removedInfo, completeInfo, completedT
         completeInfo(todo)
     }
 
-            // <div 
-            //     ref={editInput} 
-            //     style={{ display: 'none' }}
-            // >
-            //     <input
-            //         value = {editCurrentTodo}
-            //         onChange = {(event) => setEditCurrentTodo(event.target.value)} 
-            //     />
-            //     <input
-            //         value = {editCurrentTodoDescription}
-            //         onChange = {(event) => setEditCurrentTodoDescription(event.target.value)} 
-            //     />
-            //     <button onClick = {changeCurrentTodo}>Change</button>
-            // </div>
     // const [oldTodo, setOldTodo] = useState("")
-    // const [editCurrentTodo, setEditCurrentTodo] = useState("")
-    // const [editCurrentTodoDescription, setEditCurrentTodoDescription] = useState("")
     //
     // useEffect(() => {
     //     setEditCurrentTodo(currentTodo[0])
@@ -118,9 +126,6 @@ function TodoList ({ todoList, editedInfo, removedInfo, completeInfo, completedT
     //     setOldTodo(currentTodo[0])
     // }, [currentTodo])
     //
-    // const changeCurrentTodo = () => {
-    //     editedInfo(editCurrentTodo, editCurrentTodoDescription, oldTodo) 
-    // }
 
 
     return (
@@ -136,8 +141,6 @@ function TodoList ({ todoList, editedInfo, removedInfo, completeInfo, completedT
                     key={index}
                 >
                     <div className='todo-container'>
-                        <h2 className='todo-title'>{todo[0]}</h2>
-                        <p className='todo-description'>{todo[1]}</p>
                         <section className='edit-remove-container'>
                             <EditTodo currentTodo={todo} editTodo={editCurrentTodo}/>
                             <RemoveTodo todoToDelete={passedDeleteInfo} todo={todo}/>
@@ -148,6 +151,33 @@ function TodoList ({ todoList, editedInfo, removedInfo, completeInfo, completedT
             )}
         </ul>
     )
+}
+
+function TodoInstance() {
+   return (
+        <section className='todo-information-or-input'>
+            <h2 
+                ref={todoTitle} 
+                style={{ display: 'block' }}
+                className='todo-title'>{todo[0]}</h2>
+            <p 
+                ref={todoDescription} 
+                style={{ display: 'block' }}
+                className='todo-description'>{todo[1]}</p>
+            <input
+                ref={editTodoTitle}
+                style={{ display: 'none' }}
+                value = {todo}
+                onChange = {(event) => setEditedTitle(event.target.value)} 
+            />
+            <input
+                ref={editTodoDescription}
+                style={{ display: 'none' }}
+                value = {todo}
+                onChange = {(event) => setEditedDescription(event.target.value)} 
+            />
+        </section>
+   )
 }
 
 function AddNewTodo({ newTodoData }) {
@@ -209,7 +239,7 @@ function EditTodo({ currentTodo, editTodo }) {
             editButton.current.innerText = 'Edit'
             setEnableEditing(false)
         }
-        editTodo(currentTodo)
+        editTodo(currentTodo, enableEditing)
     }
 
     return (
