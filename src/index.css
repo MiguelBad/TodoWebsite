@@ -9,7 +9,7 @@
     --accent: #615568;
 }
 
-[data-theme="light"] {
+[data-theme="Light"] {
     font-family: 'Poppins';
     --text: #050506;
     --background: #f9fafa;

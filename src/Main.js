@@ -1,4 +1,3 @@
-import { ConnectingAirports } from '@mui/icons-material';
 import { forwardRef, useEffect, useRef, useState } from 'react';
 import './index.css';
 

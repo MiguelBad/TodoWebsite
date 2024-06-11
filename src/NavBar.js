@@ -1,7 +1,30 @@
+import { useEffect, useState } from 'react';
 import './index.css';
 import './Main.js';
 
 function TodoApp() {
+    const [theme, setTheme] = useState('Dark')
+    const [themeLoded, setThemeLoaded] = useState(false)
+
+    useEffect(() => {
+        const savedThemePreference = JSON.parse(localStorage.getItem('theme')) || 'Dark'
+        setThemeLoaded(true)
+        setTheme(savedThemePreference)
+    }, [])
+    
+    useEffect(() => {
+       themeLoded && localStorage.setItem('theme', JSON.stringify( theme ))
+    }, [theme, themeLoded])
+
+
+    const changeTheme = () => {
+        const newTheme = theme === 'Dark' ? 'Light' : 'Dark'
+        setTheme(newTheme)
+        document.documentElement.setAttribute('data-theme', newTheme)
+    }
+
+    
+
     return (
         <nav className='side-navigation'>
             <section className='top-navigation-part'>
@@ -27,7 +50,12 @@ function TodoApp() {
                 </section>
             </section>
             <section className='bottom-navigation-part'>
-                <p>Light Mode</p>
+                <button
+                    className='themeButton'
+                    onClick={() => changeTheme()}
+                >
+                    {theme} Mode
+                </button>
                 <p>Settings</p>
             </section>
         </nav>
