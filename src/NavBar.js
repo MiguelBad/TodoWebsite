@@ -2,7 +2,7 @@ import { LightMode } from '@mui/icons-material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { useEffect, useState } from 'react';
 import './index.css';
-import './Main.js';
+import TodoCategories from './TodoCategories';
 
 function TodoApp() {
     const [theme, setTheme] = useState('Dark')
@@ -54,13 +54,7 @@ function TodoApp() {
                             <h2 className='username'>User Name</h2>
                         </section>
                         <hr />
-                        <section className='todo-category-container'>
-                            <h2 className='todo-category-heading'>Todo List</h2>
-                            <ul className='todo-category-list'>
-                                <li className='todo-category'>Todo Title Sample</li>
-                            </ul>
-                            <p className='add-new-todo'>+ Add New</p>
-                        </section>
+                        <TodoCategories />
                     </section>
                     <section className='bottom-navigation-part'>
                         <button
