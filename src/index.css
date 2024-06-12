@@ -38,6 +38,16 @@ body {
         line-height: 1;
     }
 }
+button {
+    margin: 0;
+    padding: 0;
+    border: none;
+    background: none;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+    outline: none;
+}
 
 .side-navigation {
     box-sizing: border-box;
@@ -62,6 +72,7 @@ body {
         margin: 2rem 0 ;
         justify-content: space-between;
         align-items: center;
+        cursor: pointer;
 
         .menu-title {
             font-weight: 500;
@@ -113,6 +124,24 @@ body {
         }
     }
 
+}
+
+.side-navigation.hidden {
+    width: 5rem;
+
+    .bottom-navigation-part.hidden {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .hamburger-menu.hidden {
+        margin: 0.5rem 0;
+    }
+
+    .menu-hamburger-container.hidden {
+        justify-content: center;
+    }
 }
 
 .main-content {
