@@ -8,18 +8,23 @@ function TodoApp() {
     const [completedTodo, setCompletedTodo] = useState([]) 
     const [savedCompletededTodoLoaded, setSavedCompletededTodoLoaded] = useState(false) 
 
-    const currentCategory = useCurrentCategoryContext()
+    const currentCategory = useCurrentCategoryContext() || 'test'
 
     useEffect(() => {
-        const savedTodoList = JSON.parse(localStorage.getItem('savedTodoList')) || [];
-        savedTodoList ? setTodoList(savedTodoList.currentCategory) : setTodoList([])
+        const savedTodoList = JSON.parse(localStorage.getItem('savedTodoList')) || {};
+        Object.keys(savedTodoList).length !== 0 ? setTodoList(savedTodoList[ currentCategory ]) : setTodoList([])
         setSavedTodoListLoaded(true)
-    }, [])
+    }, [currentCategory])
 
     useEffect(() => {
-        const savedTodoList = JSON.parse(localStorage.getItem('savedTodoList'));
-        savedTodoList[currentCategory] = todoList
-        savedTodoListLoaded === true && localStorage.setItem('savedTodoList', JSON.stringify(savedTodoList))
+        console.log(todoList)
+        let savedTodoList = JSON.parse(localStorage.getItem('savedTodoList')) || {};
+        if (todoList) {
+            if (todoList.length !== 0 ) {
+                savedTodoList[currentCategory] = todoList  
+                savedTodoListLoaded && localStorage.setItem('savedTodoList', JSON.stringify(savedTodoList))
+            }
+        }
     }, [todoList, savedTodoListLoaded, currentCategory])
 
     useEffect(() => {
@@ -33,7 +38,7 @@ function TodoApp() {
     }, [completedTodo, savedCompletededTodoLoaded])
 
     const newTodoAdded = (todoTitle, todoDescription) => {
-        if (todoTitle !== "" && todoList.filter(title => title[0] === todoTitle).length === 0) {
+        if (todoTitle || todoList.filter(title => title[0] === todoTitle).length === 0) {
             setTodoList([...todoList, [todoTitle, todoDescription === "" ? null : todoDescription]])
         }
     }
@@ -138,72 +143,72 @@ function TodoList ({ todoList, editedInfo, removedInfo, completeInfo, completedT
 
     return (
         <>
-        { todoList ? (
-        <ul>
-            {todoList.map((todo, index) => 
-                <li 
-                    style= {{ backgroundColor : 
-                     completedTodo.filter(item => item === todo[0]).length === 1 
-                        ? 'var(--secondary)'
-                        : 'var(--accent)'
-                    }}
-                    className='todo'
-                    key={index}
-                >
-                    <div className='todo-container'>
-                        <div className='todo-information-or-input'>
-                            <section 
-                                ref={(element) => (todoInfoElement.current[index] = element)}
-                                style={{ display: 'block' }}
-                                className='todo-information'
-                            >
-                                <h2 className='todo-title'>{todo[0]}</h2>
-                                <p className='todo-description'>{todo[1]}</p>
-                            </section>
-                            <section 
-                                ref={(element) => (todoEditElement.current[index] = element)}
-                                style={{ display: 'none' }}
-                            >
-                                <div className='edit-todo-input'>
-                                    <input
-                                        className='edit-title-input'
-                                        value = {editedTitle}
-                                        onChange = {(event) => setEditedTitle(event.target.value)} 
-                                    />
-                                    <input
-                                        className='edit-description-input'
-                                        value = {editedDescription}
-                                        onChange = {(event) => setEditedDescription(event.target.value)} 
-                                    />
-                                    <button 
-                                        className='edit-button'
-                                        onClick = {() => changeCurrentTodo(todo, index)}
+            { todoList ? (
+                <ul>
+                    {todoList.map((todo, index) => 
+                        <li 
+                            style= {{ backgroundColor : 
+                                completedTodo.filter(item => item === todo[0]).length === 1 
+                                    ? 'var(--secondary)'
+                                    : 'var(--accent)'
+                            }}
+                            className='todo'
+                            key={index}
+                        >
+                            <div className='todo-container'>
+                                <div className='todo-information-or-input'>
+                                    <section 
+                                        ref={(element) => (todoInfoElement.current[index] = element)}
+                                        style={{ display: 'block' }}
+                                        className='todo-information'
                                     >
-                                        Change
-                                    </button>
+                                        <h2 className='todo-title'>{todo[0]}</h2>
+                                        <p className='todo-description'>{todo[1]}</p>
+                                    </section>
+                                    <section 
+                                        ref={(element) => (todoEditElement.current[index] = element)}
+                                        style={{ display: 'none' }}
+                                    >
+                                        <div className='edit-todo-input'>
+                                            <input
+                                                className='edit-title-input'
+                                                value = {editedTitle}
+                                                onChange = {(event) => setEditedTitle(event.target.value)} 
+                                            />
+                                            <input
+                                                className='edit-description-input'
+                                                value = {editedDescription}
+                                                onChange = {(event) => setEditedDescription(event.target.value)} 
+                                            />
+                                            <button 
+                                                className='edit-button'
+                                                onClick = {() => changeCurrentTodo(todo, index)}
+                                            >
+                                                Change
+                                            </button>
+                                        </div>
+                                    </section>
                                 </div>
-                            </section>
-                        </div>
-                        <section className='edit-remove-complete-container'>
-                            <EditTodo 
-                                ref={(element) => (editButton.current[index] = element) }
-                                currentTodo={todo} 
-                                editTodo={toggleEditToCurrentTodo}
-                                index={index}
-                                cancelOtherEdits={cancelOtherEdits}
-                            />
-                            <RemoveTodo todoToDelete={passedDeleteInfo} todo={todo}/>
-                            <CompleteTodo todoToComplete={passedCompleteInfo} todo={todo}/>
-                        </section>
-                    </div>
-                </li>
-            )}
-        </ul>
-        ) : (
-            <p>No todo</p>
-        )
-    }
-</>
+                                <section className='edit-remove-complete-container'>
+                                    <EditTodo 
+                                        ref={(element) => (editButton.current[index] = element) }
+                                        currentTodo={todo} 
+                                        editTodo={toggleEditToCurrentTodo}
+                                        index={index}
+                                        cancelOtherEdits={cancelOtherEdits}
+                                    />
+                                    <RemoveTodo todoToDelete={passedDeleteInfo} todo={todo}/>
+                                    <CompleteTodo todoToComplete={passedCompleteInfo} todo={todo}/>
+                                </section>
+                            </div>
+                        </li>
+                    )}
+                </ul>
+            ) : (
+                    <p>No todo</p>
+                )
+            }
+        </>
     )
 }
 
