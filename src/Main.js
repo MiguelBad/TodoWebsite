@@ -8,22 +8,20 @@ function TodoApp() {
     const [completedTodo, setCompletedTodo] = useState([]) 
     const [savedCompletededTodoLoaded, setSavedCompletededTodoLoaded] = useState(false) 
 
-    const currentCategory = useCurrentCategoryContext() || 'test'
+    const currentCategory = useCurrentCategoryContext()
 
     useEffect(() => {
         const savedTodoList = JSON.parse(localStorage.getItem('savedTodoList')) || {};
-        Object.keys(savedTodoList).length !== 0 ? setTodoList(savedTodoList[ currentCategory ]) : setTodoList([])
+        const todoCurrentCategory = savedTodoList[currentCategory] || []
+        setTodoList(todoCurrentCategory)
         setSavedTodoListLoaded(true)
     }, [currentCategory])
 
     useEffect(() => {
-        console.log(todoList)
-        let savedTodoList = JSON.parse(localStorage.getItem('savedTodoList')) || {};
-        if (todoList) {
-            if (todoList.length !== 0 ) {
-                savedTodoList[currentCategory] = todoList  
-                savedTodoListLoaded && localStorage.setItem('savedTodoList', JSON.stringify(savedTodoList))
-            }
+        if (savedTodoListLoaded) {
+            const savedTodoList = JSON.parse(localStorage.getItem('savedTodoList')) || {};
+            savedTodoList[currentCategory] = todoList  
+            localStorage.setItem('savedTodoList', JSON.stringify(savedTodoList))
         }
     }, [todoList, savedTodoListLoaded, currentCategory])
 
@@ -70,14 +68,21 @@ function TodoApp() {
 
     return (
         <main className='main-content'>
-            <h1 className='todo-category-title'>{currentCategory}</h1>
-            <TodoList todoList={todoList} 
-                editedInfo={changeCurrentTodo} 
-                removedInfo={removeCurrentTodo} 
-                completeInfo={completeCurrentTodo}
-                completedTodo={completedTodo}
-            />
-            <AddNewTodo newTodoData={newTodoAdded} />
+            { currentCategory ? (
+                <>
+                    <h1 className='todo-category-title'>{currentCategory}</h1>
+                    <TodoList todoList={todoList} 
+                        editedInfo={changeCurrentTodo} 
+                        removedInfo={removeCurrentTodo} 
+                        completeInfo={completeCurrentTodo}
+                        completedTodo={completedTodo}
+                    />
+                    <AddNewTodo newTodoData={newTodoAdded} />
+                </>
+            ) : (
+                    <>
+                    </>
+                )}
         </main>
     );
 }
