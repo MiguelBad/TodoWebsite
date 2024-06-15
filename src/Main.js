@@ -1,5 +1,6 @@
 import { forwardRef, useEffect, useRef, useState } from 'react';
 import './index.css';
+import { useCurrentCategoryContext } from './TodoContext';
 
 function TodoApp() {
     const [todoList, setTodoList] = useState([])
@@ -7,15 +8,19 @@ function TodoApp() {
     const [completedTodo, setCompletedTodo] = useState([]) 
     const [savedCompletededTodoLoaded, setSavedCompletededTodoLoaded] = useState(false) 
 
+    const currentCategory = useCurrentCategoryContext()
+
     useEffect(() => {
         const savedTodoList = JSON.parse(localStorage.getItem('savedTodoList')) || [];
-        setTodoList(savedTodoList)
+        savedTodoList ? setTodoList(savedTodoList.currentCategory) : setTodoList([])
         setSavedTodoListLoaded(true)
     }, [])
 
     useEffect(() => {
-        savedTodoListLoaded === true && localStorage.setItem('savedTodoList', JSON.stringify(todoList))
-    }, [todoList, savedTodoListLoaded])
+        const savedTodoList = JSON.parse(localStorage.getItem('savedTodoList'));
+        savedTodoList[currentCategory] = todoList
+        savedTodoListLoaded === true && localStorage.setItem('savedTodoList', JSON.stringify(savedTodoList))
+    }, [todoList, savedTodoListLoaded, currentCategory])
 
     useEffect(() => {
         const savedCompletededTodo = JSON.parse(localStorage.getItem('savedCompletededTodo')) || []
@@ -60,7 +65,7 @@ function TodoApp() {
 
     return (
         <main className='main-content'>
-            <h1 className='todo-category-title'>Todo Title Sample</h1>
+            <h1 className='todo-category-title'>{currentCategory}</h1>
             <TodoList todoList={todoList} 
                 editedInfo={changeCurrentTodo} 
                 removedInfo={removeCurrentTodo} 
@@ -132,6 +137,8 @@ function TodoList ({ todoList, editedInfo, removedInfo, completeInfo, completedT
     }
 
     return (
+        <>
+        { todoList ? (
         <ul>
             {todoList.map((todo, index) => 
                 <li 
@@ -192,6 +199,11 @@ function TodoList ({ todoList, editedInfo, removedInfo, completeInfo, completedT
                 </li>
             )}
         </ul>
+        ) : (
+            <p>No todo</p>
+        )
+    }
+</>
     )
 }
 
