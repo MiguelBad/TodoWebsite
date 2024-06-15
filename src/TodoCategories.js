@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
 import './index.css';
+import { useCurrentCategoryContext, useSetSelectedCategoryContext } from './TodoContext';
 
 function TodoCategories () {
     const [todoCategory, setTodoCategory] = useState([])
     const [savedCategoriesLoaded, setSavedCategoriesLoaded] = useState(false)
     const [isAddingCategory, setIsAddingCategory] = useState(false)
     const [addCategoryInput, setAddCategoryInput] = useState('')
+    const setCurrentCategory = useSetSelectedCategoryContext()
 
     useEffect(() => {
         const savedCategories = JSON.parse(localStorage.getItem('savedCategories')) || []
@@ -29,6 +31,10 @@ function TodoCategories () {
         }
     }
 
+    const changeCurrentCategory = (category) => {
+        setCurrentCategory(category)
+    }
+
     return (
         <section className='todo-category-container'>
             <h2 className='todo-category-heading'>Todo List</h2>
@@ -40,7 +46,11 @@ function TodoCategories () {
                         <li
                             key={index}
                             className='todo-category'
-                        >{category}</li>
+                        >
+                            <button onClick={() => changeCurrentCategory(category)}>
+                                {category}
+                            </button>
+                        </li>
                     )}
                 </ul>
             )}
